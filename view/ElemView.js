@@ -1,16 +1,26 @@
 class ElemView {
   #szuloElem;
-  constructor(szuloElem) {
+  #index
+  #allapot;
+  constructor(szuloElem, index) {
+    this.#index = index;
     this.#szuloElem = szuloElem;
+    this.#allapot = true;
     this.#megjelenit();
 
-    this.elem = $(".elem");
+    this.elem = $(".elem:last-child");
     this.pElem = this.elem.children("p");
-    console.log(this.pElem)
 
     $(".elem").on("click", () => {
-      this.#esemenyTrigger("kattint");
+        if(this.#allapot){
+            this.#esemenyTrigger("kattint");
+            this.#allapot = false;
+        }
     });
+  }
+
+  getIndex(){
+    return this.#index;
   }
 
   setJel(jel){
@@ -18,12 +28,12 @@ class ElemView {
   }
 
   #megjelenit() {
-    let txt = "<div class='elem'><p>X</p></div>";
+    let txt = "<div class='elem'><p></p></div>";
     this.#szuloElem.append(txt);
   }
 
   #esemenyTrigger(esemenyNev) {
-    const E = new CustomEvent(esemenyNev);
+    const E = new CustomEvent(esemenyNev, {detail: this});
     window.dispatchEvent(E);
   }
 }
